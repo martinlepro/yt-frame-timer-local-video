@@ -87,7 +87,7 @@ function compute() {
   const milliseconds = totalMilliseconds % 1000;
   const finalTime = `${hours}h ${String(minutes).padStart(2, "0")}m ${String(seconds).padStart(2, "0")}s ${String(milliseconds).padStart(3, "0")}ms`;
   const modMessage = `Mod Message: Time starts at ${start.toFixed(6)} and ends at ${end.toFixed(6)} at ${fps} fps to get a final time of ${finalTime}.`;
-  const credits = "Retimed using [yt-frame-timer](https://slashinfty.github.io/yt-frame-timer)";
+  const credits = "Retimed using [yt-frame-timer](https://martinlepro.github.io/yt-frame-timer-local-video/)";
 
   document.getElementById("time").value = finalTime;
   const message = document.getElementById("modMessage");
