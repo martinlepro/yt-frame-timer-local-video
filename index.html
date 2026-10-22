@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="version" content="1.2.0">
+  <meta name="version" content="1.3.0">
   <title>YouTube Frame Timer</title>
   <link rel="stylesheet" href="https://stackedit.io/style.css">
   <style>
@@ -12,76 +12,52 @@
     .video-controls { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; }
     .video-status { font-family:monospace; margin:.5rem 0; }
     button { cursor:pointer; }
-    
-/* Frame-step buttons: hidden on desktop */
-.frame-step-button {
-  display: none;
-}
-
-/* Show frame-step buttons on mobile */
-@media (max-width: 768px) {
-  .frame-step-button {
-    display: inline-block;
-    padding: 12px 16px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background: #222;
-    color: white;
-    touch-action: manipulation;
-  }
-
-  .frame-step-button:disabled {
-    opacity: 0.4;
-  }
-}
-
   </style>
   <script src="main.js" defer></script>
 </head>
 <body class="stackedit">
   <div class="stackedit__html">
     <h1 id="youtube-interval-timer">YouTube Interval Timer</h1>
-    <p>Measure the duration between two points in a video, with frame-level precision.</p>
+    <p>Mesure la durée entre deux points d’une vidéo, avec une précision à l’image près.</p>
 
     <section class="local-video-panel">
-      <h3>Local Video</h3>
-      <p>Choose a video from your device. It will be played locally in your browser and will not be uploaded to a server.</p>
-      <label for="videoFile">Import a video:</label>
+      <h3>Vidéo locale</h3>
+      <p>Choisis une vidéo depuis ton appareil. Elle reste lue localement dans ton navigateur et n’est pas envoyée sur un serveur.</p>
+      <label for="videoFile">Importer une vidéo :</label>
       <input type="file" id="videoFile" accept="video/*">
       <video id="localVideo" controls playsinline preload="metadata"></video>
-      <div class="video-status" id="videoStatus" aria-live="polite">No video loaded.</div>
+      <div class="video-status" id="videoStatus" aria-live="polite">Aucune vidéo chargée.</div>
       <div class="video-controls">
-        <button type="button" id="prevFrame" class="frame-step-button" disabled>◀ Image précédente</button>
-        <button type="button" id="nextFrame" class="frame-step-button" disabled>Image suivante ▶</button>
-        <button type="button" id="setStart" disabled>Set Start Point Here</button>
-        <button type="button" id="setEnd" disabled>Set End Point Here</button>
+        <button type="button" id="prevFrame" disabled>◀ Image précédente</button>
+        <button type="button" id="nextFrame" disabled>Image suivante ▶</button>
+        <button type="button" id="setStart" disabled>Définir le départ ici</button>
+        <button type="button" id="setEnd" disabled>Définir la fin ici</button>
       </div>
-      <p>Use the previous/next frame buttons to move through the video one frame at a time. Enter the frame rate (FPS) below to set the frame step.</p>
+      <p>Utilise les boutons d’image précédente/suivante pour te déplacer image par image. Renseigne le nombre d’images par seconde (FPS) ci-dessous pour régler le pas.</p>
     </section>
 
-    <h3 id="video-framerate">Frame Rate</h3>
+    <h3 id="video-framerate">Fréquence d’images</h3>
     <p>
-      <label for="framerate">Frame Rate (FPS):</label>
+      <label for="framerate">Framerate (FPS) :</label>
       <input type="number" id="framerate" min="1" max="1000" step="1" value="60">
     </p>
 
-    <h3 id="video-endpoints">Start and End Points</h3>
-    <p>For a YouTube video, you can still paste the "Copy debug info" data into the fields below. For a local video, use the player's "Set Start/End Point Here" buttons.</p>
+    <h3 id="video-endpoints">Points de départ et de fin</h3>
+    <p>Les deux champs acceptent à la fois : le bouton « Définir le départ/la fin ici » du lecteur local, et un collage direct des données « Copy debug info » de YouTube (le temps <code>lct</code> est extrait automatiquement et aligné sur l’image selon le FPS).</p>
     <p>
-      <label for="startobj">Start (seconds):</label>
-      <input type="number" id="startobj" step="any" style="width:100%">
+      <label for="startobj">Départ (secondes) :</label>
+      <input type="text" id="startobj" inputmode="decimal" autocomplete="off" placeholder="Secondes, ou colle ici « Copy debug info » YouTube" style="width:100%">
     </p>
     <p>
-      <label for="endobj">End (seconds):</label>
-      <input type="number" id="endobj" step="any" style="width:100%">
+      <label for="endobj">Fin (secondes) :</label>
+      <input type="text" id="endobj" inputmode="decimal" autocomplete="off" placeholder="Secondes, ou colle ici « Copy debug info » YouTube" style="width:100%">
     </p>
 
-    <h3 id="video-time">Calculated Duration</h3>
-    <button id="computeButton" type="button">Calculate Duration</button>
-    <input type="text" id="time" readonly size="24" aria-label="Calculated duration">
+    <h3 id="video-time">Durée calculée</h3>
+    <button id="computeButton" type="button">Calculer la durée</button>
+    <input type="text" id="time" readonly size="24" aria-label="Durée calculée">
     <p><textarea id="modMessage" cols="40" rows="5" disabled></textarea></p>
-    <button id="modMessageButton" type="button" disabled>Copy Message</button>
+    <button id="modMessageButton" type="button" disabled>Copier le message</button>
   </div>
 </body>
 </html>

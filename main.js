@@ -36,41 +36,13 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("computeButton").addEventListener("click", compute);
   document.getElementById("modMessageButton").addEventListener("click", copyModMessage);
   fpsInput.addEventListener("change", validateFPS);
-  
-  // YouTube-style frame stepping with keyboard shortcuts.
-  document.addEventListener("keydown", (event) => {
-    const active = document.activeElement;
-    const tag = active?.tagName?.toLowerCase();
 
-    // Do not intercept shortcuts while typing in a field.
-    if (
-      tag === "input" ||
-      tag === "textarea" ||
-      tag === "select" ||
-      active?.isContentEditable
-    ) {
-      return;
-    }
-
-    // Only step through a loaded, paused video.
-    if (
-      video.readyState < 1 ||
-      video.paused === false ||
-      !video.src
-    ) {
-      return;
-    }
-
-    // Comma = previous frame; period = next frame.
-    if (event.key === ",") {
-      event.preventDefault();
-      seekFrame(-1);
-    } else if (event.key === ".") {
-      event.preventDefault();
-      seekFrame(1);
-    }
+  // Départ / Fin : accepte secondes à la main, bouton du lecteur local, ou JSON « Copy debug info » YouTube.
+  ["startobj", "endobj"].forEach(id => {
+    const input = document.getElementById(id);
+    input.addEventListener("change", parseForTime);
+    input.addEventListener("paste", () => setTimeout(() => parseForTime({ target: input }), 0));
   });
-
 });
 
 function getFPS() {
@@ -108,8 +80,10 @@ function setEndpoint(id) {
 
 function compute() {
   const fps = getFPS();
-  const start = Number.parseFloat(document.getElementById("startobj").value);
-  const end = Number.parseFloat(document.getElementById("endobj").value);
+  const startParsed = extractSeconds(document.getElementById("startobj").value);
+  const endParsed = extractSeconds(document.getElementById("endobj").value);
+  const start = startParsed ? startParsed.seconds : NaN;
+  const end = endParsed ? endParsed.seconds : NaN;
   if (!fps || !Number.isFinite(start) || !Number.isFinite(end) || start < 0 || end < start) {
     alert("Vérifie le FPS et les points de départ/fin (la fin doit être après le départ).");
     return;
@@ -122,7 +96,7 @@ function compute() {
   const milliseconds = totalMilliseconds % 1000;
   const finalTime = `${hours}h ${String(minutes).padStart(2, "0")}m ${String(seconds).padStart(2, "0")}s ${String(milliseconds).padStart(3, "0")}ms`;
   const modMessage = `Mod Message: Time starts at ${start.toFixed(6)} and ends at ${end.toFixed(6)} at ${fps} fps to get a final time of ${finalTime}.`;
-  const credits = "Retimed using [yt-frame-timer](https://martinlepro.github.io/yt-frame-timer-local-video/)";
+  const credits = "Retimed using [yt-frame-timer](https://slashinfty.github.io/yt-frame-timer)";
 
   document.getElementById("time").value = finalTime;
   const message = document.getElementById("modMessage");
@@ -160,12 +134,40 @@ function formatClock(seconds) {
   return `${mins}:${secs}`;
 }
 
-// Retain compatibility with YouTube's "Copy debug info" JSON, whose lct field is seconds.
-function parseForTime(event) {
+// Extrait un temps en secondes depuis : un nombre simple, ou le JSON « Copy debug info » de YouTube (champ lct).
+function extractSeconds(raw) {
+  const text = String(raw).trim();
+  if (!text) return null;
+  const plain = Number(text.replace(",", "."));
+  if (Number.isFinite(plain)) return { seconds: plain, fromYouTube: false };
   try {
-    const value = JSON.parse(event.target.value).lct;
-    if (Number.isFinite(Number(value))) event.target.value = Number(value).toFixed(6);
+    const lct = Number(JSON.parse(text).lct);
+    if (Number.isFinite(lct)) return { seconds: lct, fromYouTube: true };
   } catch (_) {
-    // The fields also accept plain numeric seconds for local videos.
+    // JSON invalide : tentative par expression régulière (texte copié partiellement).
+  }
+  const match = text.match(/"lct"\s*:\s*"?(-?\d+(?:\.\d+)?)"?/);
+  return match ? { seconds: Number(match[1]), fromYouTube: true } : null;
+}
+
+function parseForTime(event) {
+  const input = event.target;
+  const parsed = extractSeconds(input.value);
+  const status = document.getElementById("videoStatus");
+  if (!parsed) {
+    if (input.value.trim()) {
+      input.setCustomValidity("Valeur non reconnue : entre des secondes ou colle le « Copy debug info » YouTube.");
+      input.reportValidity();
+    }
+    return;
+  }
+  input.setCustomValidity("");
+  let seconds = parsed.seconds;
+  const fps = getFPS();
+  // Pour YouTube, on aligne sur l'image (comme l'outil d'origine) ; pour une saisie manuelle, on garde la valeur telle quelle.
+  if (parsed.fromYouTube && fps) seconds = Math.floor(seconds * fps + 1e-6) / fps;
+  input.value = seconds.toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
+  if (parsed.fromYouTube) {
+    status.textContent = `${input.id === "startobj" ? "Départ" : "Fin"} importé depuis YouTube : ${input.value} s.`;
   }
 }
