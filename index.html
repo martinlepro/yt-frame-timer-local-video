@@ -12,6 +12,30 @@
     .video-controls { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; }
     .video-status { font-family:monospace; margin:.5rem 0; }
     button { cursor:pointer; }
+    
+/* Frame-step buttons: hidden on desktop */
+.frame-step-button {
+  display: none;
+}
+
+/* Show frame-step buttons on mobile */
+@media (max-width: 768px) {
+  .frame-step-button {
+    display: inline-block;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #222;
+    color: white;
+    touch-action: manipulation;
+  }
+
+  .frame-step-button:disabled {
+    opacity: 0.4;
+  }
+}
+
   </style>
   <script src="main.js" defer></script>
 </head>
