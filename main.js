@@ -36,6 +36,41 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("computeButton").addEventListener("click", compute);
   document.getElementById("modMessageButton").addEventListener("click", copyModMessage);
   fpsInput.addEventListener("change", validateFPS);
+  
+  // YouTube-style frame stepping with keyboard shortcuts.
+  document.addEventListener("keydown", (event) => {
+    const active = document.activeElement;
+    const tag = active?.tagName?.toLowerCase();
+
+    // Do not intercept shortcuts while typing in a field.
+    if (
+      tag === "input" ||
+      tag === "textarea" ||
+      tag === "select" ||
+      active?.isContentEditable
+    ) {
+      return;
+    }
+
+    // Only step through a loaded, paused video.
+    if (
+      video.readyState < 1 ||
+      video.paused === false ||
+      !video.src
+    ) {
+      return;
+    }
+
+    // Comma = previous frame; period = next frame.
+    if (event.key === ",") {
+      event.preventDefault();
+      seekFrame(-1);
+    } else if (event.key === ".") {
+      event.preventDefault();
+      seekFrame(1);
+    }
+  });
+
 });
 
 function getFPS() {
