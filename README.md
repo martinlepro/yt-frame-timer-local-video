@@ -1,15 +1,16 @@
 # yt-frame-timer
 
-Outil navigateur pour calculer la durée entre deux points d’une vidéo.
+A browser-based tool for calculating the duration between two points in a video.
 
-## Utilisation
-- Ouvre `index.html` dans un navigateur récent.
-- Dans **Vidéo locale**, choisis un fichier vidéo sur ton appareil. Le fichier est lu localement avec le lecteur HTML5, sans envoi vers un serveur.
-- Indique le FPS de la vidéo, puis utilise **Image précédente** / **Image suivante** pour avancer par pas d’une image.
-- Clique sur **Définir le départ ici** et **Définir la fin ici** aux positions voulues, puis sur **Calculer la durée**.
-- Tu peux aussi saisir directement les temps en secondes, avec décimales.
+## Usage
+- Open `index.html` in a modern browser.
+- Under **Local Video**, select a video file from your device. The file is played locally using the HTML5 video player, without being uploaded to a server.
+- Enter the video's FPS, then use **Previous Frame** / **Next Frame** to move one frame at a time.
+- Click **Set Start Here** and **Set End Here** at the desired positions, then click **Calculate Duration**.
+- You can also enter the timestamps directly in seconds, including decimal values.
 
-Note : le navigateur ne permet pas toujours un positionnement parfaitement exact sur chaque image selon le codec et le navigateur. Le pas d’image dépend du FPS saisi. Un élément `iframe` n’est pas adapté à la lecture directe d’un fichier local ; le lecteur vidéo HTML5 remplit ce rôle pour les fichiers choisis sur l’appareil.
+Note: Depending on the codec and browser, the browser may not always allow perfectly accurate seeking to individual frames. The frame step depends on the entered FPS. An `iframe` is not suitable for directly playing a local video file; the HTML5 video player handles playback of files selected from the device.
 
-Le projet original était destiné à retimer des vidéos YouTube pour la vérification de speedruns.
-"# yt-frame-timer-local-video" 
+The original project was designed to retime YouTube videos for speedrun verification.
+
+# yt-frame-timer-local-video
