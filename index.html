@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,46 +18,46 @@
 <body class="stackedit">
   <div class="stackedit__html">
     <h1 id="youtube-interval-timer">YouTube Interval Timer</h1>
-    <p>Mesure la durée entre deux points d’une vidéo, avec une précision à l’image près.</p>
+    <p>Measure the duration between two points in a video, with frame-level precision.</p>
 
     <section class="local-video-panel">
-      <h3>Vidéo locale</h3>
-      <p>Choisis une vidéo depuis ton appareil. Elle reste lue localement dans ton navigateur et n’est pas envoyée sur un serveur.</p>
-      <label for="videoFile">Importer une vidéo :</label>
+      <h3>Local Video</h3>
+      <p>Choose a video from your device. It will be played locally in your browser and will not be uploaded to a server.</p>
+      <label for="videoFile">Import a video:</label>
       <input type="file" id="videoFile" accept="video/*">
       <video id="localVideo" controls playsinline preload="metadata"></video>
-      <div class="video-status" id="videoStatus" aria-live="polite">Aucune vidéo chargée.</div>
+      <div class="video-status" id="videoStatus" aria-live="polite">No video loaded.</div>
       <div class="video-controls">
-        <button type="button" id="prevFrame" disabled>◀ Image précédente</button>
-        <button type="button" id="nextFrame" disabled>Image suivante ▶</button>
-        <button type="button" id="setStart" disabled>Définir le départ ici</button>
-        <button type="button" id="setEnd" disabled>Définir la fin ici</button>
+        <button type="button" id="prevFrame" disabled>◀ Previous Frame</button>
+        <button type="button" id="nextFrame" disabled>Next Frame ▶</button>
+        <button type="button" id="setStart" disabled>Set Start Point Here</button>
+        <button type="button" id="setEnd" disabled>Set End Point Here</button>
       </div>
-      <p>Utilise les boutons d’image précédente/suivante pour te déplacer image par image. Renseigne le nombre d’images par seconde (FPS) ci-dessous pour régler le pas.</p>
+      <p>Use the previous/next frame buttons to move through the video one frame at a time. Enter the frame rate (FPS) below to set the frame step.</p>
     </section>
 
-    <h3 id="video-framerate">Fréquence d’images</h3>
+    <h3 id="video-framerate">Frame Rate</h3>
     <p>
-      <label for="framerate">Framerate (FPS) :</label>
+      <label for="framerate">Frame Rate (FPS):</label>
       <input type="number" id="framerate" min="1" max="1000" step="1" value="60">
     </p>
 
-    <h3 id="video-endpoints">Points de départ et de fin</h3>
-    <p>Pour une vidéo YouTube, tu peux toujours coller les données « Copy debug info » dans les champs ci-dessous. Pour une vidéo locale, utilise les boutons « Définir le départ/la fin ici » du lecteur.</p>
+    <h3 id="video-endpoints">Start and End Points</h3>
+    <p>For a YouTube video, you can still paste the "Copy debug info" data into the fields below. For a local video, use the player's "Set Start/End Point Here" buttons.</p>
     <p>
-      <label for="startobj">Départ (secondes) :</label>
+      <label for="startobj">Start (seconds):</label>
       <input type="number" id="startobj" step="any" style="width:100%">
     </p>
     <p>
-      <label for="endobj">Fin (secondes) :</label>
+      <label for="endobj">End (seconds):</label>
       <input type="number" id="endobj" step="any" style="width:100%">
     </p>
 
-    <h3 id="video-time">Durée calculée</h3>
-    <button id="computeButton" type="button">Calculer la durée</button>
-    <input type="text" id="time" readonly size="24" aria-label="Durée calculée">
+    <h3 id="video-time">Calculated Duration</h3>
+    <button id="computeButton" type="button">Calculate Duration</button>
+    <input type="text" id="time" readonly size="24" aria-label="Calculated duration">
     <p><textarea id="modMessage" cols="40" rows="5" disabled></textarea></p>
-    <button id="modMessageButton" type="button" disabled>Copier le message</button>
+    <button id="modMessageButton" type="button" disabled>Copy Message</button>
   </div>
 </body>
 </html>
